@@ -3,13 +3,8 @@ window.onload=function(){
     //var id = svgdoc.getElementById("path817")
 
     var o = document.getElementById("building");
-    console.log(o);
     var svgdoc = o.contentDocument;
-    console.log(svgdoc);
     var item = svgdoc.getElementById("path817");
-    console.log(item);
-    //var id = svgdoc.getElementById("encoded:floor=0,room=17,name=fox,type=shape")
-//    item.setAttribute("fill", "red");
     
     // read
     var attrs = item.getAttribute("style").split(";");
@@ -29,7 +24,5 @@ window.onload=function(){
         attrs += key+":"+d[key];
     }
     item.setAttribute("style", attrs);
-    
-    console.log(item);
 }
 
