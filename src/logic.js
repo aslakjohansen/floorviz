@@ -19,10 +19,7 @@ colorize = function (tag, color) {
     tag.setAttribute("style", attrs);
 }
 
-window.onload=function(){
-    //var svgdoc = document.querySelector(".svgClass").getSVGDocument()
-    //var id = svgdoc.getElementById("path817")
-
+window.onload = function () {
     var o = document.getElementById("building");
     var svgdoc = o.contentDocument;
     var item = svgdoc.getElementById("path817");
