@@ -1,0 +1,10 @@
+{
+    "test": {
+        "floors": {
+            "0": {
+                "label": "Ground Floor",
+                "plan":  "test0.svg"
+            }
+        }
+    }
+}
