@@ -1,13 +1,6 @@
-window.onload=function(){
-    //var svgdoc = document.querySelector(".svgClass").getSVGDocument()
-    //var id = svgdoc.getElementById("path817")
-
-    var o = document.getElementById("building");
-    var svgdoc = o.contentDocument;
-    var item = svgdoc.getElementById("path817");
-    
+colorize = function (tag, color) {
     // read
-    var attrs = item.getAttribute("style").split(";");
+    var attrs = tag.getAttribute("style").split(";");
     var d = {};
     for (var i=0 ; i<attrs.length; i++) {
         var elements = attrs[i].split(":");
@@ -15,7 +8,7 @@ window.onload=function(){
     }
     
     // modify
-    d["fill"] = "#ff0000";
+    d["fill"] = color;
     
     // write
     attrs = "";
@@ -23,6 +16,16 @@ window.onload=function(){
         if (attrs!="") attrs += ";";
         attrs += key+":"+d[key];
     }
-    item.setAttribute("style", attrs);
+    tag.setAttribute("style", attrs);
+}
+
+window.onload=function(){
+    //var svgdoc = document.querySelector(".svgClass").getSVGDocument()
+    //var id = svgdoc.getElementById("path817")
+
+    var o = document.getElementById("building");
+    var svgdoc = o.contentDocument;
+    var item = svgdoc.getElementById("path817");
+    colorize(item, "#ff0000");
 }
 
