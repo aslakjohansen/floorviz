@@ -1,4 +1,4 @@
-var index = {};
+var index = {}; // roomname ↦ {"tag" ↦ TAG, "data" ↦ KEY ↦ VALUE}
 
 colorize = function (tag, color) {
     // read
