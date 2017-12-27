@@ -30,6 +30,7 @@ window.onload = function () {
     ids = svgdoc.getElementsByTagName('*');
     console.log(ids);
     
+    // generate index
     tags = svgdoc.querySelectorAll('[id^=encoded]');
     console.log(tags);
     for (var i=0 ; i<tags.length; i++) {
