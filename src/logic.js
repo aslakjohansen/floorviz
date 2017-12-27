@@ -24,5 +24,11 @@ window.onload = function () {
     var svgdoc = o.contentDocument;
     var item = svgdoc.getElementById("path817");
     colorize(item, "#ff0000");
+    
+    ids = svgdoc.getElementsByTagName('*');
+    console.log(ids);
+    
+    ids = svgdoc.querySelectorAll('[id^=encoded]');
+    console.log(ids);
 }
 
