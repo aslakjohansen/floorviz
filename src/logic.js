@@ -1,4 +1,6 @@
 var index = {}; // roomname ↦ {"tag" ↦ TAG, "data" ↦ KEY ↦ VALUE}
+var uuid2roomname = {}; // uuid ↦ roomname
+
 
 colorize = function (tag, color) {
     // read
@@ -57,5 +59,27 @@ window.onload = function () {
     }
     
     console.log(index);
+    
+    // https://hpbn.co/xmlhttprequest/
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://volta.sdu.dk/backend/republish', true); // true for asynchronous
+    xhr.setRequestHeader("User-Agent", "floorviz");
+    xhr.seenBytes = 0;
+    
+    xhr.onreadystatechange = function() { 
+        if(xhr.readyState > 2) {
+            var json_strings = xhr.responseText.substr(xhr.seenBytes).split("\r");
+            console.log("elements = "+json_strings.length);
+            for (var i=0 ; i<json_strings.length; i++) {
+//                console.log("element "+i+" ...");
+                json_string = json_strings[i];
+                console.log(json_string);
+                o = JSON.parse(json_string);
+//                console.log(o);
+            }
+            xhr.seenBytes = xhr.responseText.length; 
+        }
+    };
+    xhr.send("Metadata/Location/Building=\"OU44\" and Metadata/Media=\"air\"");
 }
 
