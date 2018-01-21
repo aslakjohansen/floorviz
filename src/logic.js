@@ -1,6 +1,35 @@
 var index = {}; // roomname ↦ {"tag" ↦ TAG, "data" ↦ KEY ↦ VALUE}
 var uuid2roomname = {}; // uuid ↦ roomname
 
+perform_subscriptions = function () {
+}
+
+new_view = function (view_name) {
+}
+
+populate_view_choices = function () {
+}
+
+extract_views = function () {
+}
+
+hoddb_query_room = function (hoddb_url, callback) {
+    if (callback) callback();
+}
+
+hoddb_query_building = function (hoddb_url, callback) {
+    if (callback) callback();
+}
+
+new_model = function (hoddb_url, callback) {
+    hoddb_query_building(hoddb_url, function () {
+        hoddb_query_rooms(hoddb_url, function () {
+            extract_views();
+            populate_view_choices();
+            if (callback) callback();
+        });
+    });
+}
 
 colorize = function (tag, color) {
     // read
