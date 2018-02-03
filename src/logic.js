@@ -13,7 +13,7 @@ populate_view_choices = function () {
 extract_views = function () {
 }
 
-hoddb_query_room = function (hoddb_url, callback) {
+hoddb_query_rooms = function (hoddb_url, callback) {
     if (callback) callback();
 }
 
@@ -110,5 +110,15 @@ window.onload = function () {
         }
     };
     xhr.send("Metadata/Location/Building=\"OU44\" and Metadata/Media=\"air\"");
+    
+    // detect entering of new uri
+    const node = document.getElementById("hod-uri");
+    node.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            console.log("got enter and '"+node.value+"'")
+            hod_uri = node.value;
+            new_model(hod_uri, null);
+        }
+    });
 }
 
