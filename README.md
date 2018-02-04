@@ -16,11 +16,18 @@
 
 ### Namespace
 
-### Building Annotations
+### SVG Annotations
+
+- Link to SVG with floorplan
+- Map from stream uuid to svg id
 
 ### Stream Annotations
 
+- Map from some entity in a room to a stream (including all information to fetch it)
+
 ### Scale Annotations
+
+- Map from some stream (see above) to a min and a max
 
 ## Future Work
 
