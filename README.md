@@ -5,7 +5,7 @@
 - Modification of a displayed SVG object loaded from a file
 - Javascript interaction with [HodDB](https://hoddb.org)
 - The [building properties](https://github.com/aslakjohansen/brick-data) extension to [Brick](http://brickschema.org)
-- Javascript interaction with the [republication interface](https://people.eecs.berkeley.edu/~stevedh/smap2/archiver.html#real-time-data-access) of a [sMAP-style archiver](https://github.com/SoftwareDefinedBuildings/smap/tree/unitoftime)
+- Javascript interaction with the [republish interface](https://people.eecs.berkeley.edu/~stevedh/smap2/archiver.html#real-time-data-access) of a [sMAP-style archiver](https://github.com/SoftwareDefinedBuildings/smap/tree/unitoftime)
 
 ## User Workflow
 
