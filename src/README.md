@@ -9,3 +9,5 @@
 
 # Future Work
 
+- Support for aspects other than the spatial (floorplan). This includes the HVAC, district heating and lighting systems.
+
