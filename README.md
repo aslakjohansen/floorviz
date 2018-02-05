@@ -16,6 +16,8 @@
 
 ### Namespace
 
+The namspace for the properties required by the application.
+
 ### SVG Annotations
 
 - Link to SVG with floorplan
