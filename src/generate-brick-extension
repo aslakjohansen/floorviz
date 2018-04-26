@@ -1,0 +1,64 @@
+#!/usr/bin/env python3.5
+
+from sys import argv
+from rdflib import Graph, Namespace, URIRef, Literal
+
+# guard: commandline arguments
+if len(argv) != 3:
+    print('Syntax: %s PATH_TO_BRICK_DATA_TTL_FILE OUTPUT_FILENAME' % argv[0])
+    print('        %s ../../brick-data/src/brick-data.ttl ../var/florviz.ttl' % argv[0])
+    exit(1)
+bd_filename = argv[1]
+fv_filename = argv[2]
+
+################################################################ namespaces ####
+
+g = Graph()
+
+# source namespaces
+RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#')
+OWL  = Namespace('http://www.w3.org/2002/07/owl#')
+g.bind('rdf' , RDF)
+g.bind('rdfs', RDFS)
+g.bind('owl' , OWL)
+
+# load brick-data namespace
+BD     = Namespace('https://brickschema.org/schema/1.0.1/BrickData#')
+BDSMAP = Namespace('https://brickschema.org/schema/1.0.1/BrickDataSmap#')
+BDS    = Namespace('https://brickschema.org/schema/1.0.1/BrickDataStatic#')
+g.parse(bd_filename, format='turtle')
+
+# floorviz namespace
+FV = Namespace('http://asjo.dk/ontologies/floorviz/20180101#')
+g.bind('fv', FV)
+
+######################################################### modeling approach ####
+
+FloorViz = FV['FloorViz']
+g.add( (FloorViz, RDF.type, BD['Model_Approach']) )
+
+######################################################## floorplan property ####
+
+FloorPlan = FV['hasFloorplan']
+g.add( (FloorPlan, RDFS.subClassOf, BD['Property']) )
+g.add( (FloorViz, BD['hasProperty'], FloorPlan) )
+g.add( (FloorPlan, RDFS.label, Literal("URL of svg file")) )
+
+############################################################# area property ####
+
+Area = FV['hasArea']
+g.add( (Area, RDFS.subClassOf, BD['Property']) )
+g.add( (FloorViz, BD['hasProperty'], Area) )
+
+MetricArea = FV['hasMetricArea']
+g.add( (MetricArea, RDFS.subClassOf, Area) )
+g.add( (FloorViz, BD['hasProperty'], MetricArea) )
+g.add( (MetricArea, RDFS.label, Literal("Metric area (m^2)")) )
+
+############################################################## store result ####
+
+# store result
+print('Number of relations: %u' % (len(g)))
+g.serialize(fv_filename, 'turtle')
+
