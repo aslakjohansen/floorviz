@@ -9,8 +9,9 @@
 
 ## User Workflow
 
-1. Enter an URI for a HodDB installation exposing a model containing the required annotations. Press enter. This will bring up the schematics of the building, load a list of supported modalities and start data collection.
-2. Choose a modality. Doing so will update the view into the collected data.
+1. Generate Brick extension by running `make`. This expects to find a checkout of [brick-data](https://github.com/aslakjohansen/brick-data) next to this one.
+2. Enter an URI for a HodDB installation exposing a model containing the required annotations. Press enter. This will bring up the schematics of the building, load a list of supported modalities and start data collection.
+3. Choose a modality. Doing so will update the view into the collected data.
 
 ## Required Annotations
 
