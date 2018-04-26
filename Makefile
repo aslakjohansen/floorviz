@@ -15,5 +15,5 @@ var:
 	mkdir var
 
 var/floorviz.ttl: var src/generate-brick-extension
-	./src/generate-brick-extension ../brick-data/src/brick-data.ttl  var/florviz.ttl
+	./src/generate-brick-extension ../brick-data/src/brick-data.ttl  var/floorviz.ttl
 
