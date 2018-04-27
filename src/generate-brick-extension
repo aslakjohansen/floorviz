@@ -40,20 +40,27 @@ g.add( (FloorViz, RDF.type, BD['Model_Approach']) )
 
 ######################################################## floorplan property ####
 
-FloorPlan = FV['hasFloorplan']
+FloorPlan = FV['Floorplan']
 g.add( (FloorPlan, RDFS.subClassOf, BD['Property']) )
 g.add( (FloorViz, BD['hasProperty'], FloorPlan) )
 g.add( (FloorPlan, RDFS.label, Literal("URL of svg file")) )
 
+hasFloorPlan = FV['hasFloorplan']
+g.add( (hasFloorPlan, RDFS.subPropertyOf, BD['hasData']) )
+g.add( (hasFloorPlan, RDFS.label, Literal("Connects an entity to an fv:Floorplan")) )
+
 ############################################################# area property ####
 
-Area = FV['hasArea']
+Area = FV['Area']
 g.add( (Area, RDFS.subClassOf, BD['Property']) )
 g.add( (FloorViz, BD['hasProperty'], Area) )
 
-MetricArea = FV['hasMetricArea']
+hasArea = FV['hasArea']
+g.add( (hasArea, RDFS.subPropertyOf, BD['hasData']) )
+g.add( (hasArea, RDFS.label, Literal("Connects an entity to an fv:Area")) )
+
+MetricArea = FV['MetricArea']
 g.add( (MetricArea, RDFS.subClassOf, Area) )
-g.add( (FloorViz, BD['hasProperty'], MetricArea) )
 g.add( (MetricArea, RDFS.label, Literal("Metric area (m^2)")) )
 
 ############################################################## store result ####
