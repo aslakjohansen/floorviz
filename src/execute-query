@@ -1,0 +1,60 @@
+#!/usr/bin/env python3.5
+
+import json
+import asyncio
+import aiohttp
+import sys
+
+useragent = 'execute-query'
+default_query  = 'queries/floor2svg.rq'
+default_result = 'queries/floor2svg.json'
+default_uri    = 'http://192.168.122.244:47808/api/query'
+
+async def query (uri, query):
+    async with aiohttp.ClientSession() as session:
+        async with session.post(uri, data=query, headers={'User-Agent': useragent}) as response:
+            
+            # guard: HTTP error code
+            if response.status != 200:
+                print('Error: Archiver returned HTTP %u' % response.status)
+                exit()
+            
+            # parse as JSON
+            s = await response.text()
+            print(s)
+            try:
+                parsed = json.loads(s)
+            except Exception as e:
+                print('Error: Unable to parse archiver response: %s'+str(e))
+                exit()
+            
+            return parsed
+
+async def main ():
+    with open(qpath) as fo:
+        q = ''.join(fo.readlines())
+    
+    result = await query(uri, q)
+    pretty = json.dumps(result, sort_keys=True, indent=4, separators=(',', ': '))
+    
+    with open(rpath, 'w') as fo:
+        fo.writelines = [pretty]
+    
+    print(pretty)
+
+# guard: command line arguments
+if len(sys.argv) < 4:
+    print('Syntax: %s QUERY_PATH RESULT_PATH HODDB_URL' % sys.argv[0])
+    print('        %s %s %s %s' % (sys.argv[0], default_query, default_result, default_uri))
+    sys.exit(1)
+
+# parse arguments
+qpath = sys.argv[1]
+rpath = sys.argv[2]
+uri   = sys.argv[3]
+
+# run asyncio event loop
+asyncio.get_event_loop().run_until_complete(main())
+for task in asyncio.Task.all_tasks():
+    task.cancel()
+
