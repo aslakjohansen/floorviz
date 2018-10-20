@@ -1,0 +1,6 @@
+SELECT ?floor ?floorplan
+WHERE {
+    ?floor rdf:type/rdfs:subClassOf* brick:Floor .
+    ?floor fv:hasFloorPlan/bds:hasData/bds:value ?floorplan .
+};
+
