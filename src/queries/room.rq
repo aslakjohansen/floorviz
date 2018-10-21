@@ -1,0 +1,10 @@
+SELECT ?name ?type ?area ?path
+WHERE {
+    ?room rdf:type ?t .
+    ?room rdf:type/rdfs:label ?type .
+    ?t rdfs:subClassOf* brick:Room .
+    ?room rdfs:label ?name .
+    ?room fv:hasMetricArea/bds:hasData/bds:value ?area .
+    ?room fv:hasPath/bds:hasData/bds:value ?area .
+};
+
