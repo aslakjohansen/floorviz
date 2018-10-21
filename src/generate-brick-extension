@@ -49,6 +49,17 @@ hasFloorPlan = FV['hasFloorplan']
 g.add( (hasFloorPlan, RDFS.subPropertyOf, BD['hasData']) )
 g.add( (hasFloorPlan, RDFS.label, Literal("Connects an entity to an fv:Floorplan")) )
 
+############################################################# path property ####
+
+Path = FV['Path']
+g.add( (Path, RDFS.subClassOf, BD['Property']) )
+g.add( (FloorViz, BD['hasProperty'], Path) )
+g.add( (Path, RDFS.label, Literal("Path within an svg file")) )
+
+hasPath = FV['hasPath']
+g.add( (hasPath, RDFS.subPropertyOf, BD['hasData']) )
+g.add( (hasPath, RDFS.label, Literal("Connects an entity to a path id in an svg file")) )
+
 ############################################################# area property ####
 
 Area = FV['Area']
