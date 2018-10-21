@@ -1,0 +1,14 @@
+SELECT ?name ?modality ?url ?uuid
+WHERE {
+    ?room rdf:type/rdfs:subClassOf* brick:Room .
+    ?room rdfs:label ?name .
+    ?room bf:hasPoint ?sensor .
+    
+    ?sensor rdf:type/rdfs:subClassOf* brick:Sensor .
+    ?sensor rdf:type/rdfs:label ?modality .
+    ?sensor bdsmap:hasData ?data .
+    
+    ?data bdsmap:uuid ?uuid .
+    ?data bdsmap:hasArchiver/bdsmap:query ?url .
+};
+
