@@ -5,6 +5,6 @@ WHERE {
     ?t rdfs:subClassOf* brick:Room .
     ?room rdfs:label ?name .
     ?room fv:hasMetricArea/bds:hasData/bds:value ?area .
-    ?room fv:hasPath/bds:hasData/bds:value ?area .
+    ?room fv:hasPath/bds:hasData/bds:value ?path .
 };
 
