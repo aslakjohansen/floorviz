@@ -6,7 +6,7 @@ from rdflib import Graph, Namespace, URIRef, Literal
 # guard: commandline arguments
 if len(argv) != 3:
     print('Syntax: %s PATH_TO_BRICK_DATA_TTL_FILE OUTPUT_FILENAME' % argv[0])
-    print('        %s ../../brick-data/src/brick-data.ttl ../var/florviz.ttl' % argv[0])
+    print('        %s ../../brick-data/src/brick-data.ttl ../var/floorviz.ttl' % argv[0])
     exit(1)
 bd_filename = argv[1]
 fv_filename = argv[2]
