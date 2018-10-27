@@ -84,7 +84,7 @@ new_config = function (hoddb_url, callback) {
     
 }
 
-load_floormaps = function (callback) {
+construct_ui = function (callback) {
     if (callback) callback();
 }
 
@@ -101,8 +101,8 @@ window.onload = function () {
             hod_uri = node.value;
             new_config(hod_uri, function () {
                 console.log("config loaded");
-                load_floormaps(function () {
-                    console.log("floormaps loaded");
+                construct_ui(function () {
+                    console.log("ui constructed");
                     subscribe(function () {
                         console.log("Ready");
                     });
