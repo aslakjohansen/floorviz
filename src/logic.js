@@ -69,7 +69,9 @@ window.onload = function () {
         if (event.key === "Enter") {
             console.log("got enter and '"+node.value+"'")
             hod_uri = node.value;
-            new_config(hod_uri, null);
+            new_config(hod_uri, function () {
+                console.log("Ready");
+            });
         }
     });
 }
