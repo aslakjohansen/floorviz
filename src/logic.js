@@ -85,6 +85,14 @@ new_config = function (hoddb_url, callback) {
 }
 
 construct_ui = function (callback) {
+    // populate floor choices
+    
+    // populate modality choices
+    
+    // populate floormap
+    
+    // disable text box
+    
     if (callback) callback();
 }
 
