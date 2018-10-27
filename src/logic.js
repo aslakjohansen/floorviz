@@ -23,7 +23,6 @@ hoddb_query = function (hoddb_url, query_url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', hoddb_url, true);
         xhr.responseType = 'json';
-//        xhr.setRequestHeader("User-Agent", useragent);
         xhr.onload = function () {
             if (this.status == 200) {
                 data = this.response;
@@ -34,10 +33,6 @@ hoddb_query = function (hoddb_url, query_url, callback) {
         xhr.send(query);
     });
 }
-
-//hoddb_fetch_data = function (hoddb_url, callback) {
-//    
-//}
 
 new_config = function (hoddb_url, callback) {
     hoddb_query(hoddb_url, 'queries/floor2svg.rq', function (data) {
