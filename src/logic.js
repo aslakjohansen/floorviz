@@ -92,7 +92,6 @@ window.onload = function () {
             console.log("got enter and '"+node.value+"'")
             hod_uri = node.value;
             new_config(hod_uri, function () {
-                console.log(archiver2uuids);
                 console.log("Ready");
             });
         }
