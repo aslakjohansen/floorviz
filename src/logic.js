@@ -84,6 +84,14 @@ new_config = function (hoddb_url, callback) {
     
 }
 
+load_floormaps = function (callback) {
+    if (callback) callback();
+}
+
+subscribe = function (callback) {
+    if (callback) callback();
+}
+
 window.onload = function () {
     // detect entering of new uri
     const node = document.getElementById("hod-uri");
@@ -92,7 +100,13 @@ window.onload = function () {
             console.log("got enter and '"+node.value+"'")
             hod_uri = node.value;
             new_config(hod_uri, function () {
-                console.log("Ready");
+                console.log("config loaded");
+                load_floormaps(function () {
+                    console.log("floormaps loaded");
+                    subscribe(function () {
+                        console.log("Ready");
+                    });
+                });
             });
         }
     });
