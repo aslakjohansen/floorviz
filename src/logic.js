@@ -7,6 +7,7 @@ var room2area = {};
 var uuid2room = {};
 var uuid2modality = {};
 var archiver2uuids = {};
+var svg2obj = {}
 //var index = {}; // roomname ↦ {"tag" ↦ TAG, "data" ↦ KEY ↦ VALUE}
 //var uuid2roomname = {}; // uuid ↦ roomname
 
@@ -87,6 +88,18 @@ new_config = function (hoddb_url, callback) {
 new_floor = function () {
     value = document.getElementById("floor_control").value;
     console.log(value);
+    var floors = Object.keys(floor2svg);
+    console.log(floors);
+    for (var i=0 ; i<floors.length ; i++) {
+        svg = floor2svg[floors[i]];
+        obj = svg2obj[svg];
+        console.log(i+": "+floors[i]+" === "+value);
+        if (floors[i]===value) {
+            obj.style.display = "block";
+        } else {
+            obj.style.display = "none";
+        }
+    }
 }
 
 new_modality = function () {
@@ -123,14 +136,20 @@ construct_ui = function (callback) {
     controls.innerHTML += code;
     
     // populate floormap
-    var f = "Floor 1";
-    obj = document.createElement("object");
-    obj.setAttribute("id"   , f);
-    obj.setAttribute("class", "svgClass");
-    obj.setAttribute("type" , "image/svg+xml");
-    obj.setAttribute("data" , floor2svg[f]);
-    obj.setAttribute("width", "100%");
-    document.getElementById("floormap").appendChild(obj);
+    var floors = Object.keys(floor2svg);
+    for (var i=0 ; i<floors.length ; i++) {
+        var svg = floor2svg[floors[i]];
+        var f = floors[i];
+        obj = document.createElement("object");
+        obj.setAttribute("id"   , f);
+        obj.setAttribute("class", "svgClass");
+        obj.setAttribute("type" , "image/svg+xml");
+        obj.setAttribute("data" , svg);
+        obj.setAttribute("width", "100%");
+        obj.style.display = "none";
+        document.getElementById("floormap").appendChild(obj);
+        svg2obj[svg] = obj
+    }
     
     // disable text box
     
