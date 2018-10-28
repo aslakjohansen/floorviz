@@ -154,7 +154,39 @@ construct_ui = function (callback) {
     if (callback) callback();
 }
 
+process = function (data, callback) {
+    console.log(o);
+    if (callback) callback();
+}
+
 subscribe = function (callback) {
+    archivers = Object.keys(archiver2uuids);
+    for (var i=0 ; i<archivers.length ; i++) {
+        archiver = archivers[i];
+        uuids = archiver2uuids[archiver];
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', archiver, true); // true for asynchronous
+//        xhr.setRequestHeader("User-Agent", useragent);
+        xhr.seenBytes = 0;
+        
+        xhr.onreadystatechange = function() { 
+            if(xhr.readyState > 2) {
+                var json_strings = xhr.responseText.substr(xhr.seenBytes).split("\r");
+                console.log("elements = "+json_strings.length);
+                for (var i=0 ; i<json_strings.length; i++) {
+                    json_string = json_strings[i];
+                    console.log(json_string);
+                    o = JSON.parse(json_string);
+                    process(o, null);
+//                    console.log(o);
+                }
+                xhr.seenBytes = xhr.responseText.length; 
+            }
+        };
+        xhr.send("Metadata/Location/Building=\"OU44\" and Metadata/Media=\"air\"");
+    }
+    
     if (callback) callback();
 }
 
