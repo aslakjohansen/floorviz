@@ -84,10 +84,43 @@ new_config = function (hoddb_url, callback) {
     
 }
 
+new_floor = function () {
+    value = document.getElementById("floor_control").value;
+    console.log(value);
+}
+
+new_modality = function () {
+    value = document.getElementById("modality_control").value;
+    console.log(value);
+}
+
 construct_ui = function (callback) {
+    var controls = document.getElementById("controls");
+    
+    // extract modalities
+    var modalities = []
+    uuids = Object.keys(uuid2modality);
+    for (var i=0 ; i<uuids.length ; i++) {
+        modality = uuid2modality[uuids[i]]
+        if (! modalities.includes(modality)) modalities.push(modality);
+    }
+    
     // populate floor choices
+    var floors = Object.keys(floor2svg);
+    var code = "<select id=\"floor_control\" onchange=\"new_floor()\">\n";
+    for (var i=0 ; i<floors.length ; i++)
+        code    += "  <option value=\""+floors[i]+"\">"+floors[i]+"\n";
+    code    += "</select>\n";
+    console.log(code);
+    controls.innerHTML += code;
     
     // populate modality choices
+    var code = "<select id=\"modality_control\" onchange=\"new_modality()\">\n";
+    for (var i=0 ; i<modalities.length ; i++)
+        code    += "  <option value=\""+modalities[i]+"\">"+modalities[i]+"\n";
+    code    += "</select>\n";
+    console.log(code);
+    controls.innerHTML += code;
     
     // populate floormap
     
