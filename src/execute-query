@@ -21,7 +21,6 @@ async def query (uri, query):
             
             # parse as JSON
             s = await response.text()
-            print(s)
             try:
                 parsed = json.loads(s)
             except Exception as e:
@@ -36,9 +35,10 @@ async def main ():
     
     result = await query(uri, q)
     pretty = json.dumps(result, sort_keys=True, indent=4, separators=(',', ': '))
+    print(pretty)
     
     with open(rpath, 'w') as fo:
-        fo.writelines = [pretty]
+        fo.writelines([pretty])
     
     print(pretty)
 
