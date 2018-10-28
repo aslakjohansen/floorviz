@@ -85,13 +85,11 @@ new_config = function (hoddb_url, callback) {
 
 new_floor = function () {
     value = document.getElementById("floor_control").value;
-    console.log(value);
+    console.log("Switching to "+value);
     var floors = Object.keys(floor2svg);
-    console.log(floors);
     for (var i=0 ; i<floors.length ; i++) {
         svg = floor2svg[floors[i]];
         obj = svg2obj[svg];
-        console.log(i+": "+floors[i]+" === "+value);
         if (floors[i]===value) {
             obj.style.display = "block";
         } else {
@@ -102,7 +100,7 @@ new_floor = function () {
 
 new_modality = function () {
     value = document.getElementById("modality_control").value;
-    console.log(value);
+    console.log("Switching to "+value);
 }
 
 construct_ui = function (callback) {
@@ -122,7 +120,6 @@ construct_ui = function (callback) {
     for (var i=0 ; i<floors.length ; i++)
         code    += "  <option value=\""+floors[i]+"\">"+floors[i]+"\n";
     code    += "</select>\n";
-    console.log(code);
     controls.innerHTML += code;
     
     // populate modality choices
@@ -130,7 +127,6 @@ construct_ui = function (callback) {
     for (var i=0 ; i<modalities.length ; i++)
         code    += "  <option value=\""+modalities[i]+"\">"+modalities[i]+"\n";
     code    += "</select>\n";
-    console.log(code);
     controls.innerHTML += code;
     
     // populate floormap
