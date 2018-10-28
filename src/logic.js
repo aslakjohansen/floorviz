@@ -1,15 +1,13 @@
 var useragent = "floorviz";
 
-var floor2svg = {};
-var room2path = {};
-var room2type = {};
-var room2area = {};
-var uuid2room = {};
-var uuid2modality = {};
-var archiver2uuids = {};
-var svg2obj = {}
-//var index = {}; // roomname ↦ {"tag" ↦ TAG, "data" ↦ KEY ↦ VALUE}
-//var uuid2roomname = {}; // uuid ↦ roomname
+var floor2svg = {}; // floor name ↦ svg url
+var room2path = {}; // room name ↦ svg path
+var room2type = {}; // room name ↦ room type
+var room2area = {}; // room name ↦ room area
+var uuid2room = {}; // uuid ↦ room name
+var uuid2modality = {}; // uuid ↦ modality
+var archiver2uuids = {}; // archiver subscription url ↦ uuid list
+var svg2obj = {} // svg url ↦ html object
 
 fetch_data = function (url, callback) {
     var xhr = new XMLHttpRequest();
