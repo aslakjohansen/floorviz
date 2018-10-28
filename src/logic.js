@@ -85,24 +85,24 @@ new_config = function (hoddb_url, callback) {
     
 }
 
-new_floor = function () {
-    value = document.getElementById("floor_control").value;
-    console.log("Switching to "+value);
+new_view = function () {
+    fvalue = document.getElementById("floor_control").value;
+    mvalue = document.getElementById("modality_control").value;
+    console.log("Switching to "+fvalue+" ⨉ "+mvalue);
     var floors = Object.keys(floor2svg);
     for (var i=0 ; i<floors.length ; i++) {
         svg = floor2svg[floors[i]];
-        obj = svg2obj[svg];
-        if (floors[i]===value) {
-            obj.style.display = "block";
-        } else {
-            obj.style.display = "none";
+        modality2obj = svg2obj[svg];
+        modalities = Object.keys(modality2obj);
+        for (var j=0 ; j<modalities.length ; j++) {
+            obj = modality2obj[modalities[j]];
+            if (floors[i]===fvalue && modalities[j]===mvalue) {
+                obj.style.display = "block";
+            } else {
+                obj.style.display = "none";
+            }
         }
     }
-}
-
-new_modality = function () {
-    value = document.getElementById("modality_control").value;
-    console.log("Switching to "+value);
 }
 
 construct_ui = function (callback) {
@@ -118,14 +118,14 @@ construct_ui = function (callback) {
     
     // populate floor choices
     var floors = Object.keys(floor2svg);
-    var code = "<select id=\"floor_control\" onchange=\"new_floor()\">\n";
+    var code = "<select id=\"floor_control\" onchange=\"new_view()\">\n";
     for (var i=0 ; i<floors.length ; i++)
         code    += "  <option value=\""+floors[i]+"\">"+floors[i]+"\n";
     code    += "</select>\n";
     controls.innerHTML += code;
     
     // populate modality choices
-    var code = "<select id=\"modality_control\" onchange=\"new_modality()\">\n";
+    var code = "<select id=\"modality_control\" onchange=\"new_view()\">\n";
     for (var i=0 ; i<modalities.length ; i++)
         code    += "  <option value=\""+modalities[i]+"\">"+modalities[i]+"\n";
     code    += "</select>\n";
@@ -136,15 +136,19 @@ construct_ui = function (callback) {
     for (var i=0 ; i<floors.length ; i++) {
         var svg = floor2svg[floors[i]];
         var f = floors[i];
-        obj = document.createElement("object");
-        obj.setAttribute("id"   , f);
-        obj.setAttribute("class", "svgClass");
-        obj.setAttribute("type" , "image/svg+xml");
-        obj.setAttribute("data" , svg);
-        obj.setAttribute("width", "100%");
-        obj.style.display = "none";
-        document.getElementById("floormap").appendChild(obj);
-        svg2obj[svg] = obj
+        for (var j=0 ; j<modalities.length ; j++) {
+            obj = document.createElement("object");
+//            obj.setAttribute("id"   , f);
+            obj.setAttribute("class", "svgClass");
+            obj.setAttribute("type" , "image/svg+xml");
+            obj.setAttribute("data" , svg);
+            obj.setAttribute("width", "100%");
+            obj.style.display = "none";
+            document.getElementById("floormap").appendChild(obj);
+            console.log(svg+"/"+modalities[j]+" <- "+obj);
+            if (!svg2obj.hasOwnProperty(svg)) svg2obj[svg] = {};
+            svg2obj[svg][modalities[j]] = obj
+        }
     }
     
     // disable text box
@@ -152,8 +156,13 @@ construct_ui = function (callback) {
     if (callback) callback();
 }
 
-colorize = function (obj, path, modality, value) {
-    console.log(obj+"["+path+"/"+modality+"] <- "+value);
+colorize = function (f, modality, path, value) {
+    console.log(f+"/"+modality+"["+path+"] <- "+value);
+    
+    svg = floor2svg[f];
+    obj = svg2obj[svg][modality];
+    
+    
 }
 
 process = function (data, callback) {
@@ -167,6 +176,7 @@ process = function (data, callback) {
         value = readings[readings.length-1][1];
         room = uuid2room[uuid];
         path = room2path[room];
+        f = room2floor[room];
         
         // guard: unknown point
         if (uuid     === undefined
@@ -174,16 +184,10 @@ process = function (data, callback) {
          || readings === undefined
          || value    === undefined
          || room     === undefined
-         || path     === undefined) continue;
+         || path     === undefined
+         || f        === undefined) continue;
         
-        f = room2floor[room];
-        svg = floor2svg[f];
-        obj = svg2obj[svg];
-        
-        // guard: unknown svg object
-        if (obj === undefined) continue
-        
-        colorize(obj, path, modality, value);
+        colorize(f, modality, path, value);
     }
     
     if (callback) callback();
