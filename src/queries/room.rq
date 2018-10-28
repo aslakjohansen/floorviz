@@ -1,4 +1,4 @@
-SELECT ?name ?type ?area ?path
+SELECT ?name ?type ?area ?path ?floorname
 WHERE {
     ?room rdf:type ?t .
     ?room rdf:type/rdfs:label ?type .
@@ -6,5 +6,9 @@ WHERE {
     ?room rdfs:label ?name .
     ?room fv:hasMetricArea/bds:hasData/bds:value ?area .
     ?room fv:hasPath/bds:hasData/bds:value ?path .
+    
+    ?floor rdf:type/rdfs:subClassOf* brick:Floor .
+    ?floor rdfs:label ?floorname .
+    ?floor bf:contains ?room .
 };
 

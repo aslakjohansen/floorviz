@@ -4,6 +4,7 @@ var floor2svg = {}; // floor name ↦ svg url
 var room2path = {}; // room name ↦ svg path
 var room2type = {}; // room name ↦ room type
 var room2area = {}; // room name ↦ room area
+var room2floor = {}; // room name ↦ floor name
 var uuid2room = {}; // uuid ↦ room name
 var uuid2modality = {}; // uuid ↦ modality
 var archiver2uuids = {}; // archiver subscription url ↦ uuid list
@@ -50,7 +51,7 @@ new_config = function (hoddb_url, callback) {
         if (--count===0 && callback) callback();
     });
     
-    // room2path, room2type and room2area
+    // room2path, room2type, room2area, room2floor
     hoddb_query(hoddb_url, 'queries/room.rq', function (data) {
         var i;
         for (i=0 ; i<data.length ; i++) {
@@ -58,6 +59,7 @@ new_config = function (hoddb_url, callback) {
             room2path[entry["?name"]["Value"]] = entry["?path"]["Value"];
             room2type[entry["?name"]["Value"]] = entry["?type"]["Value"];
             room2area[entry["?name"]["Value"]] = entry["?area"]["Value"];
+            room2floor[entry["?name"]["Value"]] = entry["?floorname"]["Value"];
         };
         if (--count===0 && callback) callback();
     });
@@ -150,6 +152,10 @@ construct_ui = function (callback) {
     if (callback) callback();
 }
 
+colorize = function (obj, path, modality, value) {
+    console.log(obj+"["+path+"/"+modality+"] <- "+value);
+}
+
 process = function (data, callback) {
     console.log(data);
     
@@ -159,6 +165,8 @@ process = function (data, callback) {
         path = paths[i];
         uuid = data[path]["uuid"];
         console.log(uuid);
+        modality = uuid2modality[uuid];
+        console.log(modality);
         readings = data[path]["Readings"];
         console.log(readings);
         value = readings[readings.length-1][1];
@@ -170,11 +178,20 @@ process = function (data, callback) {
         
         // guard: unknown point
         if (uuid     === undefined
+         || modality === undefined
          || readings === undefined
          || value    === undefined
          || room     === undefined
          || path     === undefined) continue;
         
+        f = room2floor[room];
+        svg = floor2svg[f];
+        obj = svg2obj[svg];
+        
+        // guard: unknown svg object
+        if (obj === undefined) continue
+        
+        colorize(obj, path, modality, value);
     }
     
     if (callback) callback();
