@@ -8,7 +8,7 @@ var room2floor = {}; // room name ↦ floor name
 var uuid2room = {}; // uuid ↦ room name
 var uuid2modality = {}; // uuid ↦ modality
 var archiver2uuids = {}; // archiver subscription url ↦ uuid list
-var svg2obj = {} // svg url ↦ html object
+var svg2obj = {} // svg url ↦ modality ↦ html object
 
 fetch_data = function (url, callback) {
     var xhr = new XMLHttpRequest();
@@ -157,24 +157,16 @@ colorize = function (obj, path, modality, value) {
 }
 
 process = function (data, callback) {
-    console.log(data);
-    
     paths = Object.keys(data);
     
     for (var i=0 ; i<paths.length ; i++) {
         path = paths[i];
         uuid = data[path]["uuid"];
-        console.log(uuid);
         modality = uuid2modality[uuid];
-        console.log(modality);
         readings = data[path]["Readings"];
-        console.log(readings);
         value = readings[readings.length-1][1];
-        console.log(value);
         room = uuid2room[uuid];
-        console.log(room);
         path = room2path[room];
-        console.log(path);
         
         // guard: unknown point
         if (uuid     === undefined
