@@ -123,6 +123,14 @@ construct_ui = function (callback) {
     controls.innerHTML += code;
     
     // populate floormap
+    var f = "Floor 1";
+    obj = document.createElement("object");
+    obj.setAttribute("id"   , f);
+    obj.setAttribute("class", "svgClass");
+    obj.setAttribute("type" , "image/svg+xml");
+    obj.setAttribute("data" , floor2svg[f]);
+    obj.setAttribute("width", "100%");
+    document.getElementById("floormap").appendChild(obj);
     
     // disable text box
     
