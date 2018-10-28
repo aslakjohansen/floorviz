@@ -1,5 +1,6 @@
 var useragent = "floorviz";
 
+// support data structures
 var floor2svg = {}; // floor name ↦ svg url
 var room2path = {}; // room name ↦ svg path
 var room2type = {}; // room name ↦ room type
@@ -9,6 +10,12 @@ var uuid2room = {}; // uuid ↦ room name
 var uuid2modality = {}; // uuid ↦ modality
 var archiver2uuids = {}; // archiver subscription url ↦ uuid list
 var svg2obj = {} // svg url ↦ modality ↦ html object
+var modality_min = {} // modality ↦ minimum value
+var modality_max = {} // modality ↦ maximum value
+
+// colormap range
+minhue = 0
+maxhue = 85.0/360
 
 fetch_data = function (url, callback) {
     var xhr = new XMLHttpRequest();
@@ -156,13 +163,74 @@ construct_ui = function (callback) {
     if (callback) callback();
 }
 
+// https://en.wikipedia.org/wiki/HSL_and_HSV
+hsv2color = function (h, s, v) {
+    var c = s*v;
+    console.log("chroma = "+c);
+    var hmark = h/60;
+    console.log("hmark = "+hmark);
+    var x = c*(1 - Math.abs((hmark % 2)-1));
+    console.log("x = "+x);
+    var r1, g1, b2;
+    switch (Math.floor(hmark)) {
+        case 0: r1 = c, g1 = x, b1 = 0; break;
+        case 1: r1 = x, g1 = c, b1 = 0; break;
+        case 2: r1 = 0, g1 = c, b1 = x; break;
+        case 3: r1 = 0, g1 = x, b1 = c; break;
+        case 4: r1 = x, g1 = 0, b1 = c; break;
+        case 5: r1 = c, g1 = 0, b1 = x; break;
+    }
+    console.log("r1g1b1 ("+r1+","+g1+","+b1+")");
+    var m = v-c;
+    console.log("m = "+m);
+    var r = r1+m;
+    var g = g1+m;
+    var b = b1+m;
+    console.log("rgb ("+r+","+g+","+b+")");
+    return "#cc3300"
+}
+
 colorize = function (f, modality, path, value) {
     console.log(f+"/"+modality+"["+path+"] <- "+value);
     
     svg = floor2svg[f];
     obj = svg2obj[svg][modality];
     
+    // update map of lowest and highest observed values
+    if (!modality_min.hasOwnProperty(modality)) modality_min[modality] = value;
+    if (!modality_max.hasOwnProperty(modality)) modality_max[modality] = value;
+    if (value < modality_min[modality]) modality_min[modality] = value;
+    if (value > modality_max[modality]) modality_max[modality] = value;
     
+    // calculate color
+    vmin = modality_min[modality];
+    vmax = modality_max[modality];
+    pos = (value-vmin)/(vmax-vmin);
+    hue = minhue+pos*(maxhue-minhue);
+    color = hsv2color(hue, 1, 0.85);
+    
+    // coloate path
+    var svgdoc = obj.contentDocument;
+    var p = svgdoc.getElementById(path);
+    
+    // read
+    var attrs = p.getAttribute("style").split(";");
+    var d = {};
+    for (var i=0 ; i<attrs.length; i++) {
+        var elements = attrs[i].split(":");
+        d[elements[0]] = elements[1];
+    }
+    
+    // modify
+    d["fill"] = color;
+    
+    // write
+    attrs = "";
+    for (var key in d) {
+        if (attrs!="") attrs += ";";
+        attrs += key+":"+d[key];
+    }
+    p.setAttribute("style", attrs);
 }
 
 process = function (data, callback) {
@@ -207,14 +275,14 @@ subscribe = function (callback) {
         xhr.seenBytes = 0;
         
         xhr.onreadystatechange = function() {
-            console.log("recv: '"+xhr.readyState+"'");
+//            console.log("recv: '"+xhr.readyState+"'");
             if(xhr.readyState > 2) {
                 var json_strings = xhr.responseText.substr(xhr.seenBytes).split("\n");
-                console.log("elements = "+json_strings.length);
-                console.log(json_strings);
+//                console.log("elements = "+json_strings.length);
+//                console.log(json_strings);
                 for (var i=0 ; i<json_strings.length; i++) {
                     json_string = json_strings[i];
-                    console.log(json_string);
+//                    console.log(json_string);
                     try {
                         o = JSON.parse(json_string);
                         process(o, null);
