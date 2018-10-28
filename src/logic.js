@@ -151,7 +151,25 @@ construct_ui = function (callback) {
 }
 
 process = function (data, callback) {
-    console.log(o);
+    console.log(data);
+    
+    paths = Object.keys(data);
+    
+    for (var i=0 ; i<paths.length ; i++) {
+        path = paths[i];
+        uuid = data[path]["uuid"];
+        console.log(uuid);
+        readings = data[path]["Readings"];
+        console.log(readings);
+        value = readings[readings.length-1][1];
+        console.log(value);
+        room = uuid2room[uuid];
+        console.log(room);
+        path = room2path[room];
+        console.log(path);
+        
+    }
+    
     if (callback) callback();
 }
 
@@ -159,28 +177,37 @@ subscribe = function (callback) {
     archivers = Object.keys(archiver2uuids);
     for (var i=0 ; i<archivers.length ; i++) {
         archiver = archivers[i];
+        archiver = "http://localhost/volta/republish";
         uuids = archiver2uuids[archiver];
+        console.log("About to subscribe to "+archiver);
         
         var xhr = new XMLHttpRequest();
         xhr.open('POST', archiver, true); // true for asynchronous
 //        xhr.setRequestHeader("User-Agent", useragent);
         xhr.seenBytes = 0;
         
-        xhr.onreadystatechange = function() { 
+        xhr.onreadystatechange = function() {
+            console.log("recv: '"+xhr.readyState+"'");
             if(xhr.readyState > 2) {
-                var json_strings = xhr.responseText.substr(xhr.seenBytes).split("\r");
+                var json_strings = xhr.responseText.substr(xhr.seenBytes).split("\n");
                 console.log("elements = "+json_strings.length);
+                console.log(json_strings);
                 for (var i=0 ; i<json_strings.length; i++) {
                     json_string = json_strings[i];
                     console.log(json_string);
-                    o = JSON.parse(json_string);
-                    process(o, null);
-//                    console.log(o);
+                    try {
+                        o = JSON.parse(json_string);
+                        process(o, null);
+//                        console.log(o);
+                    } catch (err) {
+                        console.log("Error: "+err);
+                    }
                 }
                 xhr.seenBytes = xhr.responseText.length; 
             }
         };
-        xhr.send("Metadata/Location/Building=\"OU44\" and Metadata/Media=\"air\"");
+        xhr.send("Metadata/Location/Building=\"OU44\"");
+//        xhr.send("Metadata/Location/Building=\"OU44\" and Metadata/Media=\"air\"");
     }
     
     if (callback) callback();
