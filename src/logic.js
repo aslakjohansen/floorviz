@@ -14,7 +14,7 @@ fetch_data = function (url, callback) {
     xhr.open('GET', url);
     xhr.responseType = 'text'; 
     xhr.onload = function() {
-        if (this.status == 200) {
+        if (this.status === 200) {
             data = this.response;
             callback(this.response);
         }
@@ -28,7 +28,7 @@ hoddb_query = function (hoddb_url, query_url, callback) {
         xhr.open('POST', hoddb_url, true);
         xhr.responseType = 'json';
         xhr.onload = function () {
-            if (this.status == 200) {
+            if (this.status === 200) {
                 data = this.response;
                 callback(data["Rows"]);
             }
@@ -47,7 +47,7 @@ new_config = function (hoddb_url, callback) {
             entry = data[i];
             floor2svg[entry["?floorname"]["Value"]] = entry["?floorplan"]["Namespace"]+":"+entry["?floorplan"]["Value"];
         };
-        if (--count==0 && callback) callback();
+        if (--count===0 && callback) callback();
     });
     
     // room2path, room2type and room2area
@@ -59,7 +59,7 @@ new_config = function (hoddb_url, callback) {
             room2type[entry["?name"]["Value"]] = entry["?type"]["Value"];
             room2area[entry["?name"]["Value"]] = entry["?area"]["Value"];
         };
-        if (--count==0 && callback) callback();
+        if (--count===0 && callback) callback();
     });
     
     // uuid2room, archiver2uuids, uuid2modality
@@ -78,7 +78,7 @@ new_config = function (hoddb_url, callback) {
             archiver2uuids[url].push(uuid);
             uuid2modality[uuid] = modality;
         };
-        if (--count==0 && callback) callback();
+        if (--count===0 && callback) callback();
     });
     
 }
