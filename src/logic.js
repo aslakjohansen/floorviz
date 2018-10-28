@@ -168,6 +168,13 @@ process = function (data, callback) {
         path = room2path[room];
         console.log(path);
         
+        // guard: unknown point
+        if (uuid     === undefined
+         || readings === undefined
+         || value    === undefined
+         || room     === undefined
+         || path     === undefined) continue;
+        
     }
     
     if (callback) callback();
