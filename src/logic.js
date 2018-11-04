@@ -15,7 +15,8 @@ var modality_max = {} // modality ↦ maximum value
 
 // colormap range
 minhue = 0
-maxhue = 85.0/360
+maxhue = 85.0
+//maxhue = 85.0/360
 
 fetch_data = function (url, callback) {
     var xhr = new XMLHttpRequest();
