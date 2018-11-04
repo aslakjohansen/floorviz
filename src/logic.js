@@ -254,7 +254,7 @@ colorize = function (f, modality, path, value) {
     // locate path
 //    var svgdoc = obj.contentDocument;
 //    var svgdoc = obj;
-    var svgdoc = document.getElementById("Floor 2CO2 Sensor").contentDocument;
+    var svgdoc = document.getElementById(f+modality).contentDocument;
 //    var svgdoc = document.getElementById("path305");
     console.log(obj);
     console.log("svgdoc = "+svgdoc);
