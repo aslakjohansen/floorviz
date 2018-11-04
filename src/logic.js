@@ -101,14 +101,14 @@ new_view = function () {
         svg = floor2svg[floors[i]];
         modality2obj = svg2obj[svg];
         modalities = Object.keys(modality2obj);
-        for (var j=0 ; j<modalities.length ; j++) {
-            obj = modality2obj[modalities[j]];
-            if (floors[i]===fvalue && modalities[j]===mvalue) {
-                obj.style.display = "block";
-            } else {
-                obj.style.display = "none";
-            }
-        }
+//        for (var j=0 ; j<modalities.length ; j++) {
+//            obj = modality2obj[modalities[j]];
+//            if (floors[i]===fvalue && modalities[j]===mvalue) {
+//                obj.style.display = "block";
+//            } else {
+//                obj.style.display = "none";
+//            }
+//        }
     }
 }
 
@@ -119,7 +119,7 @@ construct_ui = function (callback) {
     var modalities = []
     uuids = Object.keys(uuid2modality);
     for (var i=0 ; i<uuids.length ; i++) {
-        modality = uuid2modality[uuids[i]]
+        var modality = uuid2modality[uuids[i]]
         if (! modalities.includes(modality)) modalities.push(modality);
     }
     
@@ -140,21 +140,43 @@ construct_ui = function (callback) {
     
     // populate floormap
     var floors = Object.keys(floor2svg);
+    console.log(">>>>>floors="+floors);
+    console.log(">>>>>modalities="+modalities);
     for (var i=0 ; i<floors.length ; i++) {
-        var svg = floor2svg[floors[i]];
         var f = floors[i];
+        console.log("floor:"+f);
+        var svg = floor2svg[f];
         for (var j=0 ; j<modalities.length ; j++) {
-            obj = document.createElement("object");
+            var modality = modalities[j];
+            console.log("modality:"+modality);
+            var identifier = f+modality;
+            console.log("identifier"+identifier);
+            var obj = document.createElement("object");
 //            obj.setAttribute("id"   , f);
             obj.setAttribute("class", "svgClass");
+            obj.setAttribute("id", identifier);
             obj.setAttribute("type" , "image/svg+xml");
             obj.setAttribute("data" , svg);
             obj.setAttribute("width", "100%");
-            obj.style.display = "none";
+            obj.style.display = "block"; //"none";
+            console.log("obj1 properties: '"+Object.getOwnPropertyNames(obj)+"'");
             document.getElementById("floormap").appendChild(obj);
-            console.log(svg+"/"+modalities[j]+" <- "+obj);
+            console.log("obj2 properties: '"+Object.getOwnPropertyNames(obj)+"'");
+            console.log(svg+"/"+modality+" <- "+obj);
             if (!svg2obj.hasOwnProperty(svg)) svg2obj[svg] = {};
-            svg2obj[svg][modalities[j]] = obj
+            document.getElementById("building")
+//            svg2obj[svg][modality[j]] = document.getElementById(identifier);
+            svg2obj[svg][modality[j]] = obj;
+            console.log("obj3 properties: '"+Object.getOwnPropertyNames(obj)+"'");
+            if (identifier === "Floor 2CO2 Sensor") {
+                obj.onload = function () {
+                    console.log("object loaded");
+                    console.log("|oneliner-2: "+document.getElementById("Floor 2CO2 Sensor"));
+                    console.log("|oneliner-1: "+document.getElementById("Floor 2CO2 Sensor").contentDocument);
+                    console.log("|oneliner: "+document.getElementById("Floor 2CO2 Sensor").contentDocument.getElementById("path305"));
+                    
+                };
+            }
         }
     }
     
@@ -162,6 +184,16 @@ construct_ui = function (callback) {
     
     if (callback) callback();
 }
+
+float2hex = function (float) {
+    var hex = Number(Math.floor(float*255)).toString(16);
+    if (hex.length < 2) hex = "0"+hex;
+    return hex;
+};
+
+rgb2hexcode = function(r,g,b) {
+  return "#"+float2hex(r)+float2hex(g)+float2hex(b);
+};
 
 // https://en.wikipedia.org/wiki/HSL_and_HSV
 hsv2color = function (h, s, v) {
@@ -171,7 +203,7 @@ hsv2color = function (h, s, v) {
     console.log("hmark = "+hmark);
     var x = c*(1 - Math.abs((hmark % 2)-1));
     console.log("x = "+x);
-    var r1, g1, b2;
+    var r1, g1, b1;
     switch (Math.floor(hmark)) {
         case 0: r1 = c, g1 = x, b1 = 0; break;
         case 1: r1 = x, g1 = c, b1 = 0; break;
@@ -187,7 +219,9 @@ hsv2color = function (h, s, v) {
     var g = g1+m;
     var b = b1+m;
     console.log("rgb ("+r+","+g+","+b+")");
-    return "#cc3300"
+    
+    return rgb2hexcode(r, g, b);
+//    return "#cc3300";
 }
 
 colorize = function (f, modality, path, value) {
@@ -195,6 +229,7 @@ colorize = function (f, modality, path, value) {
     
     svg = floor2svg[f];
     obj = svg2obj[svg][modality];
+    console.log("object is "+obj);
     
     // update map of lowest and highest observed values
     if (!modality_min.hasOwnProperty(modality)) modality_min[modality] = value;
@@ -206,12 +241,28 @@ colorize = function (f, modality, path, value) {
     vmin = modality_min[modality];
     vmax = modality_max[modality];
     pos = (value-vmin)/(vmax-vmin);
+    if (isNaN(pos)) pos = 0.5; // hack to make first value not result in a divide-by-zero
     hue = minhue+pos*(maxhue-minhue);
+    console.log("vmin="+vmin+" vmax="+vmax+" pos="+pos+" hue="+hue);
     color = hsv2color(hue, 1, 0.85);
+    console.log("color = "+color);
     
-    // coloate path
-    var svgdoc = obj.contentDocument;
+    console.log("oneliner-2: "+document.getElementById("Floor 2CO2 Sensor"));
+    console.log("oneliner-1: "+document.getElementById("Floor 2CO2 Sensor").contentDocument);
+    console.log("oneliner: "+document.getElementById("Floor 2CO2 Sensor").contentDocument.getElementById("path305"));
+    
+    // locate path
+//    var svgdoc = obj.contentDocument;
+//    var svgdoc = obj;
+    var svgdoc = document.getElementById("Floor 2CO2 Sensor").contentDocument;
+//    var svgdoc = document.getElementById("path305");
+    console.log(obj);
+    console.log("svgdoc = "+svgdoc);
+    console.log("properties: '"+Object.getOwnPropertyNames(svgdoc)+"'");
+    if (svgdoc === null) return;
+    console.log("path="+path);
     var p = svgdoc.getElementById(path);
+    console.log("p = "+p);
     
     // read
     var attrs = p.getAttribute("style").split(";");
@@ -285,7 +336,7 @@ subscribe = function (callback) {
 //                    console.log(json_string);
                     try {
                         o = JSON.parse(json_string);
-                        process(o, null);
+                        if (o !== null) process(o, null);
 //                        console.log(o);
                     } catch (err) {
                         console.log("Error: "+err);
@@ -314,6 +365,12 @@ window.onload = function () {
                     console.log("ui constructed");
                     subscribe(function () {
                         console.log("Ready");
+                        
+                        window.setTimeout(function(){
+                            // Handler when the DOM is fully loaded
+                            console.log("Timeouting ...");
+                            colorize("Floor 2", "Temperature Sensor", "path305", 23.1);
+                        }, 30000);
                     });
                 });
             });
