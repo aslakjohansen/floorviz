@@ -243,7 +243,7 @@ colorize = function (f, modality, path, value) {
     vmax = modality_max[modality];
     pos = (value-vmin)/(vmax-vmin);
     if (isNaN(pos)) pos = 0.5; // hack to make first value not result in a divide-by-zero
-    hue = minhue+pos*(maxhue-minhue);
+    hue = minhue+(1.0-pos)*(maxhue-minhue);
     console.log("vmin="+vmin+" vmax="+vmax+" pos="+pos+" hue="+hue);
     color = hsv2color(hue, 1, 0.85);
     console.log("color = "+color);
