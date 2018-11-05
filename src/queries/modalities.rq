@@ -9,6 +9,6 @@ WHERE {
     ?sensor bdsmap:hasData ?data .
     
     ?data bdsmap:uuid ?uuid .
-    ?data bdsmap:hasArchiver/bdsmap:query ?url .
+    ?data bdsmap:hasArchiver/bdsmap:republish ?url .
 };
 

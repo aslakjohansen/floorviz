@@ -75,19 +75,23 @@ new_config = function (hoddb_url, callback) {
     // uuid2room, archiver2uuids, uuid2modality
     hoddb_query(hoddb_url, 'queries/modalities.rq', function (data) {
         var i;
+        console.log("archiver2uuids (pre) = "+Object.keys(archiver2uuids));
         for (i=0 ; i<data.length ; i++) {
-            entry = data[i];
-            modality = entry["?modality"]["Value"];
-            uuid     = entry["?uuid"]["Value"];
-            room     = entry["?name"]["Value"];
-            url      = entry["?url"]["Namespace"]+":"+entry["?url"]["Value"];
+            var entry    = data[i];
+            var modality = entry["?modality"]["Value"];
+            var uuid     = entry["?uuid"]["Value"];
+            var room     = entry["?name"]["Value"];
+            var url      = entry["?url"]["Namespace"]+":"+entry["?url"]["Value"];
             uuid2room[uuid] = room;
             if (!archiver2uuids.hasOwnProperty(url)) {
                 archiver2uuids[url] = [];
             }
             archiver2uuids[url].push(uuid);
             uuid2modality[uuid] = modality;
+            console.log("archiver2uuids = "+Object.keys(archiver2uuids));
         };
+        console.log("archiver2uuids (post) = "+Object.keys(archiver2uuids));
+        console.log(archiver2uuids);
         if (--count===0 && callback) callback();
     });
     
@@ -322,12 +326,12 @@ process = function (data, callback) {
 }
 
 subscribe = function (callback) {
-    archivers = Object.keys(archiver2uuids);
+    var archivers = Object.keys(archiver2uuids);
     for (var i=0 ; i<archivers.length ; i++) {
-        archiver = archivers[i];
-        archiver = "http://localhost/volta/republish";
-        uuids = archiver2uuids[archiver];
-        console.log("About to subscribe to "+archiver);
+        var archiver = archivers[i];
+//        var archiver = "http://localhost/volta/republish";
+        var uuids = archiver2uuids[archiver];
+        console.log("About to subscribe to "+archiver+" with uuids "+uuids);
         
         var xhr = new XMLHttpRequest();
         xhr.open('POST', archiver, true); // true for asynchronous
@@ -354,7 +358,13 @@ subscribe = function (callback) {
                 xhr.seenBytes = xhr.responseText.length; 
             }
         };
-        xhr.send("Metadata/Location/Building=\"OU44\"");
+        
+//        where_clause = uuids.map(function (uuid) { return "uuid="+uuid}).join(" or ");
+        where_clause = uuids.map(function (uuid) { return "uuid=\""+uuid+"\""}).join(" or ");
+        console.log("where_clause: "+where_clause);
+        
+        xhr.send(where_clause);
+//        xhr.send("Metadata/Location/Building=\"OU44\"");
 //        xhr.send("Metadata/Location/Building=\"OU44\" and Metadata/Media=\"air\"");
     }
     
