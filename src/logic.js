@@ -314,6 +314,7 @@ window.onload = function () {
     const node = document.getElementById("hod-uri");
     node.addEventListener("keyup", function(event) {
         if (event.key === "Enter") {
+            node.readOnly = true;
             console.log("got enter and '"+node.value+"'")
             hod_uri = node.value;
             new_config(hod_uri, function () {
