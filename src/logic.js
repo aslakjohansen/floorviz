@@ -94,22 +94,29 @@ new_config = function (hoddb_url, callback) {
 }
 
 new_view = function () {
-    fvalue = document.getElementById("floor_control").value;
-    mvalue = document.getElementById("modality_control").value;
+    var fvalue = document.getElementById("floor_control").value;
+    var mvalue = document.getElementById("modality_control").value;
     console.log("Switching to "+fvalue+" ⨉ "+mvalue);
     var floors = Object.keys(floor2svg);
     for (var i=0 ; i<floors.length ; i++) {
-        svg = floor2svg[floors[i]];
-        modality2obj = svg2obj[svg];
-        modalities = Object.keys(modality2obj);
-//        for (var j=0 ; j<modalities.length ; j++) {
-//            obj = modality2obj[modalities[j]];
-//            if (floors[i]===fvalue && modalities[j]===mvalue) {
+        var svg = floor2svg[floors[i]];
+        var modality2obj = svg2obj[svg];
+        console.log(svg2obj);
+        console.log(modality2obj);
+        var modalities = Object.keys(modality2obj);
+        console.log("new_view - modalities:"+modalities);
+        for (var j=0 ; j<modalities.length ; j++) {
+            var obj = modality2obj[modalities[j]];
+            console.log("floors["+i+"]="+floors[i]+" fvalue="+fvalue+" modalities["+j+"]="+modalities[j]+" mvalue="+mvalue);
+            if (floors[i]===fvalue && modalities[j]===mvalue) {
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!! inside");
+                obj.width = "100%";
 //                obj.style.display = "block";
-//            } else {
+            } else {
+                obj.width = "0%";
 //                obj.style.display = "none";
-//            }
-//        }
+            }
+        }
     }
 }
 
@@ -158,16 +165,17 @@ construct_ui = function (callback) {
             obj.setAttribute("id", identifier);
             obj.setAttribute("type" , "image/svg+xml");
             obj.setAttribute("data" , svg);
-            obj.setAttribute("width", "100%");
-            obj.style.display = "block"; //"none";
+//            obj.setAttribute("width", "100%");
+            obj.setAttribute("width", "0%");
+//            obj.style.display = "block"; //"none";
             console.log("obj1 properties: '"+Object.getOwnPropertyNames(obj)+"'");
             document.getElementById("floormap").appendChild(obj);
             console.log("obj2 properties: '"+Object.getOwnPropertyNames(obj)+"'");
             console.log(svg+"/"+modality+" <- "+obj);
             if (!svg2obj.hasOwnProperty(svg)) svg2obj[svg] = {};
             document.getElementById("building")
-//            svg2obj[svg][modality[j]] = document.getElementById(identifier);
-            svg2obj[svg][modality[j]] = obj;
+            svg2obj[svg][modality] = document.getElementById(identifier);
+//            svg2obj[svg][modality] = obj;
             console.log("obj3 properties: '"+Object.getOwnPropertyNames(obj)+"'");
             if (identifier === "Floor 2CO2 Sensor") {
                 obj.onload = function () {
