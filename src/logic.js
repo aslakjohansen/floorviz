@@ -375,6 +375,7 @@ window.onload = function () {
                     subscribe(function () {
                         console.log("Ready");
                         
+                        new_view();
                         window.setTimeout(function(){
                             // Handler when the DOM is fully loaded
                             console.log("Timeouting ...");
