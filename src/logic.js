@@ -154,15 +154,6 @@ construct_ui = function (callback) {
             if (!svg2obj.hasOwnProperty(svg)) svg2obj[svg] = {};
             document.getElementById("building")
             svg2obj[svg][modality] = document.getElementById(identifier);
-            if (identifier === "Floor 2CO2 Sensor") {
-                obj.onload = function () {
-                    console.log("object loaded");
-                    console.log("|oneliner-2: "+document.getElementById("Floor 2CO2 Sensor"));
-                    console.log("|oneliner-1: "+document.getElementById("Floor 2CO2 Sensor").contentDocument);
-                    console.log("|oneliner: "+document.getElementById("Floor 2CO2 Sensor").contentDocument.getElementById("path305"));
-                    
-                };
-            }
         }
     }
     
