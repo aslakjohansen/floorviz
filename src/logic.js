@@ -1,5 +1,3 @@
-var useragent = "floorviz";
-
 // support data structures
 var floor2svg = {}; // floor name ↦ svg url
 var room2path = {}; // room name ↦ svg path
