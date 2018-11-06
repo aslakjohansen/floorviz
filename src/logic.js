@@ -325,12 +325,6 @@ window.onload = function () {
                         console.log("Ready");
                         
                         new_view();
-                        
-//                        window.setTimeout(function(){
-//                            // Handler when the DOM is fully loaded
-//                            console.log("Timeouting ...");
-//                            colorize("Floor 2", "Temperature Sensor", "path305", 23.1);
-//                        }, 30000);
                     });
                 });
             });
